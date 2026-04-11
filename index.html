@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lookout – Every Second Matters</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #ffffff;
+      color: #111;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      padding: 14px 32px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: #e8e8e8;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg {
+      width: 24px;
+      height: 24px;
+      color: #cc1f1f;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .logo-text .brand {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #111;
+    }
+
+    .logo-text .tagline {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 72px 24px 48px;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 900;
+      color: #111;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #6b7280;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── CARDS ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .card {
+      background: #f3f4f6;
+      border-radius: 16px;
+      padding: 32px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .icon-wrap {
+      width: 56px;
+      height: 56px;
+      background: #fde8e8;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .icon-wrap svg {
+      width: 28px;
+      height: 28px;
+      color: #cc1f1f;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #111;
+      line-height: 1.25;
+    }
+
+    .card-desc {
+      font-size: 15px;
+      color: #6b7280;
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .card-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #cc1f1f;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .card-btn:hover { background: #a91b1b; }
+    .card-btn:active { transform: scale(0.98); }
+
+    .card-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: #9ca3af;
+      border-top: 1px solid #e5e7eb;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="logo-wrap" href="index.html">
+      <div class="logo-icon">
+        <!-- simple shield / eye icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="brand">LOOKOUT</span>
+        <span class="tagline">Every Second Matters</span>
+      </div>
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Welcome to Lookout</h1>
+    <p>Please select your role to continue.</p>
+  </section>
+
+  <!-- ROLE CARDS -->
+  <div class="cards">
+
+    <!-- Hospital Admin -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="card-title">Hospital<br>Admin</div>
+      </div>
+      <p class="card-desc">Manage your fleet of ambulances and view driver statuses in real-time.</p>
+      <a class="card-btn" href="admin-login.html">
+        Admin Login
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <!-- Ambulance Driver -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div class="card-title">Ambulance<br>Driver</div>
+      </div>
+      <p class="card-desc">Activate emergency mode to alert nearby drivers and navigate traffic faster.</p>
+      <a class="card-btn" href="driver-login.html">
+        Driver Login
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <!-- Road User -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon-wrap">
+          <!-- car / vehicle icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="11" width="22" height="8" rx="2"/>
+            <path d="M5 11V8a2 2 0 012-2h10a2 2 0 012 2v3"/>
+            <circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/>
+          </svg>
+        </div>
+        <div class="card-title">Road User</div>
+      </div>
+      <p class="card-desc">Receive alerts for approaching emergency vehicles and help clear the way.</p>
+      <a class="card-btn" href="road-user.html">
+        Start Driving
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; 2026 Lookout &mdash; Every Second Matters
+  </footer>
+
+</body>
+</html>
