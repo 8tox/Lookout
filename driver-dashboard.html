@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Driver Console – Lookout</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body { background: var(--bg); }
+
+    .console-wrap {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* MAP SIDE */
+    .map-side {
+      position: relative;
+      background: #e4efe4;
+    }
+
+    .map-side iframe {
+      width: 100%;
+      height: 100%;
+      min-height: calc(100vh - 64px);
+      border: none;
+      display: block;
+    }
+
+    /* EMERGENCY OVERLAY on map */
+    .emergency-banner {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--red);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 99px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+      animation: pulseBar 1.5s infinite;
+      white-space: nowrap;
+    }
+
+    @keyframes pulseBar {
+      0%,100% { box-shadow: 0 0 0 0 rgba(217,43,43,0.5); }
+      50%      { box-shadow: 0 0 0 10px rgba(217,43,43,0); }
+    }
+
+    /* PANEL SIDE */
+    .panel {
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .panel-section {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-section h3 {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 14px;
+    }
+
+    /* MISSION INFO */
+    .mission-card {
+      background: var(--red-light);
+      border: 1px solid var(--red-mid);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .mission-card .mission-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--red);
+      margin-bottom: 6px;
+    }
+
+    .mission-card .mission-addr {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .mission-card .mission-detail {
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    /* EMERGENCY BUTTON */
+    .emergency-btn {
+      width: 100%;
+      padding: 18px;
+      background: var(--red);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .emergency-btn:active { transform: scale(0.97); }
+
+    .emergency-btn.active {
+      background: var(--green);
+      animation: pulseBtn 1.5s infinite;
+    }
+
+    @keyframes pulseBtn {
+      0%,100% { box-shadow: 0 0 0 0 rgba(26,122,74,0.4); }
+      50%      { box-shadow: 0 0 0 8px rgba(26,122,74,0); }
+    }
+
+    .emergency-btn svg { width: 22px; height: 22px; }
+
+    .emergency-sub {
+      font-size: 12px;
+      color: var(--text3);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* ROUTE STEPS */
+    .route-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .route-step:last-child { border-bottom: none; }
+
+    .step-icon {
+      width: 30px;
+      height: 30px;
+      background: var(--surface2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-icon svg { width: 14px; height: 14px; color: var(--text2); }
+    .step-icon.active-step { background: var(--red-light); }
+    .step-icon.active-step svg { color: var(--red); }
+
+    .step-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+    .step-dist { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+    /* ETA DISPLAY */
+    .eta-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .eta-box {
+      background: var(--surface2);
+      border-radius: var(--radius);
+      padding: 14px;
+      text-align: center;
+    }
+
+    .eta-box .eta-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text3);
+      margin-bottom: 4px;
+    }
+
+    .eta-box .eta-value {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* ALERTS SENT */
+    .alert-sent {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--amber-light);
+      border: 1px solid #FCD34D;
+      border-radius: var(--radius);
+      font-size: 13px;
+      color: var(--amber);
+      font-weight: 500;
+    }
+
+    /* PHASE TOGGLE */
+    .phase-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .phase-btn {
+      flex: 1;
+      padding: 10px 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text2);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .phase-btn.selected {
+      background: var(--red-light);
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    @media (max-width: 768px) {
+      .console-wrap { grid-template-columns: 1fr; }
+      .map-side { height: 320px; }
+      .map-side iframe { min-height: 320px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="logo-wrap" href="index.html">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="brand">LOOKOUT</span>
+        <span class="tagline">Every Second Matters</span>
+      </div>
+    </a>
+    <div class="nav-right">
+      <span class="badge badge-green"><span class="dot dot-green"></span> James Okafor · AMB-02</span>
+      <a class="btn-ghost" href="index.html">End Shift</a>
+    </div>
+  </nav>
+
+  <div class="console-wrap">
+
+    <!-- MAP -->
+    <div class="map-side">
+      <div class="emergency-banner" id="emergencyBanner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        EMERGENCY MODE ACTIVE — Road users being alerted
+      </div>
+      <iframe
+        src="https://www.openstreetmap.org/export/embed.html?bbox=-0.13%2C51.50%2C-0.09%2C51.52&layer=mapnik"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+
+    <!-- PANEL -->
+    <div class="panel">
+
+      <!-- MISSION -->
+      <div class="panel-section">
+        <h3>Active Mission</h3>
+        <div class="mission-card">
+          <div class="mission-label">📍 Patient Pickup</div>
+          <div class="mission-addr">14 Oak Lane, EC1A 1BB</div>
+          <div class="mission-detail">Reported: Cardiac arrest · Priority High</div>
+        </div>
+        <div class="mission-card" style="background:var(--blue-light);border-color:#BFDBFE;">
+          <div class="mission-label" style="color:var(--blue);">🏥 Drop-off Hospital</div>
+          <div class="mission-addr">St. Mary's Hospital</div>
+          <div class="mission-detail">Praed St, London W2 1NY</div>
+        </div>
+
+        <div class="phase-row">
+          <div class="phase-btn selected" onclick="setPhase(this,'pickup')">To Patient</div>
+          <div class="phase-btn" onclick="setPhase(this,'hospital')">To Hospital</div>
+        </div>
+      </div>
+
+      <!-- ETA -->
+      <div class="panel-section">
+        <h3>ETA</h3>
+        <div class="eta-row">
+          <div class="eta-box">
+            <div class="eta-label">To Patient</div>
+            <div class="eta-value" id="etaPatient">4 min</div>
+          </div>
+          <div class="eta-box">
+            <div class="eta-label">To Hospital</div>
+            <div class="eta-value" id="etaHospital">18 min</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMERGENCY MODE -->
+      <div class="panel-section">
+        <h3>Emergency Mode</h3>
+        <button class="emergency-btn" id="emergencyBtn" onclick="toggleEmergency()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="emergencyLabel">ACTIVATE EMERGENCY</span>
+        </button>
+        <p class="emergency-sub" id="emergencySub">Tap to broadcast alerts to nearby road users and notify dispatch</p>
+
+        <div class="alert-sent" id="alertSent" style="display:none;margin-top:14px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.63 19.79 19.79 0 01.0 .0 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.72 6.72l1.28-1.29a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 15z"/></svg>
+          <span id="alertCount">0</span> road users alerted on your route
+        </div>
+      </div>
+
+      <!-- TURN-BY-TURN -->
+      <div class="panel-section" style="flex:1;">
+        <h3>Turn-by-Turn</h3>
+
+        <div class="route-step">
+          <div class="step-icon active-step">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div>
+            <div class="step-text">Head north on Baker Street</div>
+            <div class="step-dist">Continue 0.3 km</div>
+          </div>
+        </div>
+
+        <div class="route-step">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div>
+            <div class="step-text">Turn right onto Marylebone Rd</div>
+            <div class="step-dist">Continue 0.8 km</div>
+          </div>
+        </div>
+
+        <div class="route-step">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          </div>
+          <div>
+            <div class="step-text">Turn left onto Edgware Road</div>
+            <div class="step-dist">Continue 0.5 km</div>
+          </div>
+        </div>
+
+        <div class="route-step">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+          </div>
+          <div>
+            <div class="step-text">Arrive at 14 Oak Lane</div>
+            <div class="step-dist">Destination on left</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let emergencyActive = false;
+    let alertInterval = null;
+    let alertCount = 0;
+
+    function toggleEmergency() {
+      emergencyActive = !emergencyActive;
+      const btn = document.getElementById('emergencyBtn');
+      const label = document.getElementById('emergencyLabel');
+      const sub = document.getElementById('emergencySub');
+      const banner = document.getElementById('emergencyBanner');
+      const alertBox = document.getElementById('alertSent');
+      const alertCountEl = document.getElementById('alertCount');
+
+      if (emergencyActive) {
+        btn.classList.add('active');
+        label.textContent = 'EMERGENCY ACTIVE';
+        sub.textContent = 'Deactivate when you have arrived or mission is complete';
+        banner.style.display = 'flex';
+        alertBox.style.display = 'flex';
+        alertCount = 12;
+        alertCountEl.textContent = alertCount;
+
+        alertInterval = setInterval(() => {
+          if (Math.random() > 0.5) {
+            alertCount += Math.floor(Math.random() * 3) + 1;
+            alertCountEl.textContent = alertCount;
+          }
+        }, 3000);
+      } else {
+        btn.classList.remove('active');
+        label.textContent = 'ACTIVATE EMERGENCY';
+        sub.textContent = 'Tap to broadcast alerts to nearby road users and notify dispatch';
+        banner.style.display = 'none';
+        alertBox.style.display = 'none';
+        clearInterval(alertInterval);
+        alertCount = 0;
+      }
+    }
+
+    function setPhase(el, phase) {
+      document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+  </script>
+</body>
+</html>

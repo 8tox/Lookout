@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Driver Login – Lookout</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    main {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 64px);
+      padding: 40px 24px;
+    }
+
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 48px 44px;
+      width: 100%;
+      max-width: 520px;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--red-light);
+      border: 1px solid var(--red-mid);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .login-icon svg { width: 28px; height: 28px; color: var(--red); }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .sub {
+      font-size: 14px;
+      color: var(--text2);
+      margin-bottom: 36px;
+    }
+
+    .btn-full {
+      width: 100%;
+      padding: 14px;
+      background: var(--red);
+      color: white;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      margin-top: 8px;
+    }
+    .btn-full:hover { background: var(--red-dark); }
+    .btn-full:active { transform: scale(0.98); }
+
+    .demo-box {
+      background: var(--blue-light);
+      border: 1px solid #BFDBFE;
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--blue);
+      margin-bottom: 24px;
+    }
+    .demo-box strong { display: block; margin-bottom: 4px; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="logo-wrap" href="index.html">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="brand">LOOKOUT</span>
+        <span class="tagline">Every Second Matters</span>
+      </div>
+    </a>
+    <a class="btn-ghost" href="index.html">← Back to Home</a>
+  </nav>
+
+  <main>
+    <div class="login-card">
+      <div class="login-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="11" width="22" height="8" rx="2"/>
+          <path d="M5 11V8a2 2 0 012-2h10a2 2 0 012 2v3"/>
+          <circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/>
+        </svg>
+      </div>
+      <h1>Ambulance Driver Login</h1>
+      <p class="sub">Log in with your driver ID and hospital PIN to access your navigation dashboard.</p>
+
+      <div class="demo-box">
+        <strong>Prototype Demo</strong>
+        Use any Driver ID and PIN — e.g. <code>DRV-00142</code> / <code>1234</code>
+      </div>
+
+      <div class="form-group">
+        <label for="driverid">Driver ID</label>
+        <input type="text" id="driverid" placeholder="DRV-00142"/>
+      </div>
+
+      <div class="form-group">
+        <label for="pin">4-Digit PIN</label>
+        <input type="password" id="pin" placeholder="••••" maxlength="4"/>
+      </div>
+
+      <button class="btn-full" onclick="handleLogin()">Login to Driver Console</button>
+    </div>
+  </main>
+
+  <script>
+    function handleLogin() {
+      const id = document.getElementById('driverid').value.trim();
+      const pin = document.getElementById('pin').value.trim();
+      if (!id || !pin) {
+        alert('Please enter your Driver ID and PIN.');
+        return;
+      }
+      window.location.href = 'driver-dashboard.html';
+    }
+  </script>
+</body>
+</html>

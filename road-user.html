@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Road User – Lookout</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body { background: var(--bg); }
+
+    .page-wrap {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* ALERT PANEL */
+    .alert-panel {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .panel-top {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-top h2 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .panel-top p {
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    /* STATUS CARD */
+    .status-card {
+      margin: 20px;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .status-card.clear {
+      background: var(--green-light);
+      border: 1px solid #86EFAC;
+    }
+
+    .status-card.warning {
+      background: var(--amber-light);
+      border: 1px solid #FCD34D;
+      animation: alertPulse 1.5s infinite;
+    }
+
+    .status-card.danger {
+      background: var(--red-light);
+      border: 1px solid var(--red-mid);
+      animation: alertPulse 0.8s infinite;
+    }
+
+    @keyframes alertPulse {
+      0%,100% { transform: scale(1); }
+      50%      { transform: scale(1.01); }
+    }
+
+    .status-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+
+    .status-icon svg { width: 32px; height: 32px; }
+
+    .status-icon.clear-icon { background: var(--green); }
+    .status-icon.warning-icon { background: var(--amber); }
+    .status-icon.danger-icon { background: var(--red); animation: iconPulse 0.8s infinite; }
+
+    @keyframes iconPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(217,43,43,0.5); }
+      50%      { box-shadow: 0 0 0 14px rgba(217,43,43,0); }
+    }
+
+    .status-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .status-desc {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    .status-card.clear  .status-title { color: var(--green); }
+    .status-card.warning .status-title { color: var(--amber); }
+    .status-card.danger  .status-title { color: var(--red); }
+
+    /* APPROACH INFO */
+    .approach-info {
+      margin: 0 20px 20px;
+      background: var(--surface2);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: none;
+    }
+
+    .approach-info.visible { display: block; }
+
+    .approach-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .approach-row:last-child { border-bottom: none; }
+    .approach-row .lbl { color: var(--text2); font-weight: 500; }
+    .approach-row .val { font-weight: 700; color: var(--text); }
+
+    /* DIRECTION INDICATOR */
+    .direction-wrap {
+      margin: 0 20px 20px;
+      text-align: center;
+    }
+
+    .direction-compass {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid var(--border);
+      background: var(--surface2);
+      margin: 0 auto 12px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .compass-arrow {
+      transition: transform 0.5s ease;
+    }
+
+    .direction-label {
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    /* NOTIFICATION HISTORY */
+    .notif-section {
+      padding: 0 20px 20px;
+      flex: 1;
+    }
+
+    .notif-section h3 {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 12px;
+    }
+
+    .notif-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .notif-item:last-child { border-bottom: none; }
+
+    .notif-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .notif-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+    .notif-text strong { color: var(--text); }
+    .notif-time { font-size: 11px; color: var(--text3); }
+
+    /* DEMO CONTROLS */
+    .demo-controls {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+      background: var(--surface2);
+    }
+
+    .demo-controls p {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text3);
+      margin-bottom: 10px;
+    }
+
+    .demo-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .demo-btn {
+      flex: 1;
+      padding: 9px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .demo-btn:hover { background: var(--surface2); }
+    .demo-btn.active-demo { background: var(--red-light); border-color: var(--red); color: var(--red); }
+
+    /* MAP */
+    .map-side { position: relative; }
+    .map-side iframe { width: 100%; height: 100%; min-height: calc(100vh - 64px); border: none; display: block; }
+
+    @media (max-width: 768px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      .map-side { height: 300px; }
+      .map-side iframe { min-height: 300px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="logo-wrap" href="index.html">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="brand">LOOKOUT</span>
+        <span class="tagline">Every Second Matters</span>
+      </div>
+    </a>
+    <div class="nav-right">
+      <span class="badge badge-green" id="listeningBadge"><span class="dot dot-green"></span> Listening for alerts</span>
+      <a class="btn-ghost" href="index.html">← Home</a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+
+    <!-- ALERT PANEL -->
+    <aside class="alert-panel">
+
+      <div class="panel-top">
+        <h2>Road User Monitor</h2>
+        <p>You'll be alerted automatically when an emergency vehicle is nearby.</p>
+      </div>
+
+      <!-- STATUS -->
+      <div class="status-card clear" id="statusCard">
+        <div class="status-icon clear-icon" id="statusIcon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div class="status-title" id="statusTitle">All Clear</div>
+        <div class="status-desc" id="statusDesc">No emergency vehicles detected in your vicinity. Drive safely.</div>
+      </div>
+
+      <!-- APPROACH DETAILS (shown when alert active) -->
+      <div class="approach-info" id="approachInfo">
+        <div class="approach-row">
+          <span class="lbl">Vehicle</span>
+          <span class="val">AMB-06 · Lookout</span>
+        </div>
+        <div class="approach-row">
+          <span class="lbl">Distance</span>
+          <span class="val" id="approachDist">800 m away</span>
+        </div>
+        <div class="approach-row">
+          <span class="lbl">Direction</span>
+          <span class="val">Approaching from South</span>
+        </div>
+        <div class="approach-row">
+          <span class="lbl">Speed</span>
+          <span class="val">62 km/h</span>
+        </div>
+        <div class="approach-row">
+          <span class="lbl">Est. Arrival</span>
+          <span class="val">~45 seconds</span>
+        </div>
+      </div>
+
+      <!-- DIRECTION COMPASS -->
+      <div class="direction-wrap" id="directionWrap" style="display:none;">
+        <svg class="direction-compass" viewBox="0 0 120 120" width="120" height="120">
+          <circle cx="60" cy="60" r="56" fill="var(--surface2)" stroke="var(--border)" stroke-width="2"/>
+          <text x="60" y="18" text-anchor="middle" font-size="11" fill="var(--text3)" font-family="var(--font-body)">N</text>
+          <text x="60" y="108" text-anchor="middle" font-size="11" fill="var(--text3)" font-family="var(--font-body)">S</text>
+          <text x="14" y="64" text-anchor="middle" font-size="11" fill="var(--text3)" font-family="var(--font-body)">W</text>
+          <text x="108" y="64" text-anchor="middle" font-size="11" fill="var(--text3)" font-family="var(--font-body)">E</text>
+          <g id="compassArrow" transform="rotate(180, 60, 60)">
+            <polygon points="60,25 55,70 60,65 65,70" fill="var(--red)"/>
+            <polygon points="60,95 55,60 60,65 65,60" fill="var(--text3)"/>
+          </g>
+        </svg>
+        <div class="direction-label">Ambulance approaching from <strong>South</strong></div>
+      </div>
+
+      <!-- NOTIFICATION LOG -->
+      <div class="notif-section">
+        <h3>Alert History</h3>
+        <div id="notifList">
+          <div class="notif-item">
+            <div class="notif-dot" style="background:var(--green);"></div>
+            <div>
+              <div class="notif-text">Lookout started — monitoring your area.</div>
+              <div class="notif-time">Just now</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEMO CONTROLS -->
+      <div class="demo-controls">
+        <p>Demo — Simulate Alert State</p>
+        <div class="demo-btns">
+          <button class="demo-btn" onclick="setAlert('clear')">All Clear</button>
+          <button class="demo-btn" onclick="setAlert('warning')">Warning</button>
+          <button class="demo-btn active-demo" onclick="setAlert('danger')">Danger!</button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- MAP -->
+    <div class="map-side">
+      <iframe
+        src="https://www.openstreetmap.org/export/embed.html?bbox=-0.14%2C51.49%2C-0.09%2C51.52&layer=mapnik"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+
+  </div>
+
+  <script>
+    let currentState = 'clear';
+    let notifCount = 0;
+
+    function addNotif(text, color) {
+      notifCount++;
+      const list = document.getElementById('notifList');
+      const item = document.createElement('div');
+      item.className = 'notif-item';
+      item.innerHTML = `
+        <div class="notif-dot" style="background:${color};"></div>
+        <div>
+          <div class="notif-text">${text}</div>
+          <div class="notif-time">Just now</div>
+        </div>
+      `;
+      list.insertBefore(item, list.firstChild);
+    }
+
+    function setAlert(state) {
+      currentState = state;
+      const card = document.getElementById('statusCard');
+      const icon = document.getElementById('statusIcon');
+      const title = document.getElementById('statusTitle');
+      const desc = document.getElementById('statusDesc');
+      const approachInfo = document.getElementById('approachInfo');
+      const directionWrap = document.getElementById('directionWrap');
+      const badge = document.getElementById('listeningBadge');
+
+      document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active-demo'));
+      event.target.classList.add('active-demo');
+
+      if (state === 'clear') {
+        card.className = 'status-card clear';
+        icon.className = 'status-icon clear-icon';
+        icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+        title.textContent = 'All Clear';
+        desc.textContent = 'No emergency vehicles detected in your vicinity. Drive safely.';
+        approachInfo.classList.remove('visible');
+        directionWrap.style.display = 'none';
+        badge.innerHTML = '<span class="dot dot-green"></span> Listening for alerts';
+        badge.className = 'badge badge-green';
+        addNotif('Area is clear — no nearby emergency vehicles.', 'var(--green)');
+
+      } else if (state === 'warning') {
+        card.className = 'status-card warning';
+        icon.className = 'status-icon warning-icon';
+        icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+        title.textContent = 'Ambulance Nearby';
+        desc.textContent = 'An emergency vehicle is approaching your area. Be prepared to yield.';
+        approachInfo.classList.add('visible');
+        directionWrap.style.display = 'block';
+        badge.innerHTML = '<span class="dot dot-amber" style="background:var(--amber);display:inline-block;width:7px;height:7px;border-radius:50%;"></span> Alert Active';
+        badge.className = 'badge badge-amber';
+        addNotif('<strong>Warning:</strong> AMB-06 approaching — 800m away, heading north.', 'var(--amber)');
+
+      } else if (state === 'danger') {
+        card.className = 'status-card danger';
+        icon.className = 'status-icon danger-icon';
+        icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+        title.textContent = '⚠ PULL OVER NOW';
+        desc.textContent = 'Emergency vehicle is very close. Move to the side of the road immediately and stop.';
+        approachInfo.classList.add('visible');
+        document.getElementById('approachDist').textContent = '120 m away';
+        directionWrap.style.display = 'block';
+        badge.innerHTML = '<span class="dot dot-red"></span> DANGER — Pull Over';
+        badge.className = 'badge badge-red';
+        addNotif('<strong>DANGER:</strong> AMB-06 is 120m away — pull over immediately!', 'var(--red)');
+      }
+    }
+  </script>
+</body>
+</html>

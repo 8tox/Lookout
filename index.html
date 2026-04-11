@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lookout – Every Second Matters</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .hero {
+      text-align: center;
+      padding: 80px 24px 56px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+      background: var(--red-light);
+      border: 1px solid var(--red-mid);
+      padding: 5px 14px;
+      border-radius: 99px;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(42px, 7vw, 68px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span { color: var(--red); }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 48px;
+    }
+
+    .role-label {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text3);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 20px;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .role-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .role-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--red);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .role-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
+      border-color: #ddd;
+    }
+
+    .role-card:hover::before { opacity: 1; }
+
+    .icon-wrap {
+      width: 52px;
+      height: 52px;
+      background: var(--red-light);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--red-mid);
+    }
+
+    .icon-wrap svg { width: 26px; height: 26px; color: var(--red); }
+
+    .card-header { display: flex; align-items: center; gap: 14px; }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .card-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    .card-features li {
+      font-size: 13px;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-features li::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--red);
+      flex-shrink: 0;
+    }
+
+    .card-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--red);
+      color: white;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 13px 20px;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+      margin-top: 4px;
+    }
+    .card-btn:hover { background: var(--red-dark); }
+    .card-btn:active { transform: scale(0.97); }
+
+    /* HOW IT WORKS */
+    .how-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 64px 24px;
+      text-align: center;
+      margin-bottom: 0;
+    }
+
+    .how-section h2 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .how-section .sub {
+      color: var(--text2);
+      font-size: 15px;
+      margin-bottom: 48px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0;
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .step {
+      padding: 16px 24px;
+      position: relative;
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      background: var(--red);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+
+    .step h3 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+      color: var(--text3);
+      border-top: 1px solid var(--border);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero, .role-card { animation: fadeUp 0.5s ease both; }
+    .role-card:nth-child(2) { animation-delay: 0.07s; }
+    .role-card:nth-child(3) { animation-delay: 0.14s; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="logo-wrap" href="index.html">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="brand">LOOKOUT</span>
+        <span class="tagline">Every Second Matters</span>
+      </div>
+    </a>
+    <div class="nav-right">
+      <span class="badge badge-green"><span class="dot dot-green"></span> System Live</span>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+      Emergency Response Platform
+    </div>
+    <h1>Getting ambulances there<br/><span>every second faster</span></h1>
+    <p>Lookout connects hospital dispatchers, ambulance crews, and road users in real time — clearing the path so emergency vehicles reach patients when it matters most.</p>
+    <div class="role-label">Select your role to get started</div>
+  </section>
+
+  <div class="cards">
+
+    <!-- Hospital Admin -->
+    <div class="role-card">
+      <div class="card-header">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="card-title">Hospital Admin</div>
+      </div>
+      <p class="card-desc">Manage your ambulance fleet, dispatch units to emergencies, and monitor every driver's status and location in real time.</p>
+      <ul class="card-features">
+        <li>Live fleet map with GPS tracking</li>
+        <li>One-click dispatch & route assignment</li>
+        <li>Driver status and availability board</li>
+        <li>Mission history and analytics</li>
+      </ul>
+      <a class="card-btn" href="admin-login.html">
+        Admin Login
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <!-- Ambulance Driver -->
+    <div class="role-card">
+      <div class="card-header">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="11" width="22" height="8" rx="2"/>
+            <path d="M5 11V8a2 2 0 012-2h10a2 2 0 012 2v3"/>
+            <circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/>
+            <path d="M11 6h2v2h2v2h-2v2h-2v-2H9V8h2z" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="card-title">Ambulance Driver</div>
+      </div>
+      <p class="card-desc">Activate emergency mode, get turn-by-turn navigation to patients and hospitals, and automatically alert road users ahead of you.</p>
+      <ul class="card-features">
+        <li>Emergency mode with live navigation</li>
+        <li>Patient pickup → hospital routing</li>
+        <li>Automatic road-user alerts broadcast</li>
+        <li>ETA updates to hospital & dispatch</li>
+      </ul>
+      <a class="card-btn" href="driver-login.html">
+        Driver Login
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <!-- Road User -->
+    <div class="role-card">
+      <div class="card-header">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v4l3 3"/>
+          </svg>
+        </div>
+        <div class="card-title">Road User</div>
+      </div>
+      <p class="card-desc">Receive proximity alerts for approaching emergency vehicles, see their direction on your map, and know exactly when to clear the way.</p>
+      <ul class="card-features">
+        <li>Real-time approach alerts with sound</li>
+        <li>Distance and direction indicator</li>
+        <li>Safe-to-move confirmation notice</li>
+        <li>No sign-up required</li>
+      </ul>
+      <a class="card-btn" href="road-user.html">
+        Start Driving
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <h2>How Lookout Works</h2>
+    <p class="sub">Three connected roles. One seamless system.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Emergency Dispatched</h3>
+        <p>Hospital admin receives a call and dispatches the nearest available ambulance with a single click.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Driver Navigates</h3>
+        <p>The driver activates emergency mode. Lookout plots the fastest route and broadcasts alerts to nearby road users.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Road Clears</h3>
+        <p>Road users within range receive an alert showing the ambulance direction and distance — and move aside.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Patient Reached</h3>
+        <p>Ambulance reaches the patient faster. The driver then gets a direct route to the receiving hospital.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2026 Lookout &mdash; Every Second Matters. Built as a prototype.
+  </footer>
+
+</body>
+</html>
