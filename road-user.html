@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#D92B2B"/>
+  <link rel="manifest" href="manifest.json"/>
   <title>Road User – Lookout</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
@@ -271,8 +273,8 @@
     <aside class="alert-panel">
 
       <div class="panel-top">
-        <h2>Road User Monitor</h2>
-        <p>You'll be alerted automatically when an emergency vehicle is nearby.</p>
+        <h2>Road User Monitor · Haryana Demo</h2>
+        <p id="profileLine">You'll be alerted automatically when an emergency vehicle is nearby.</p>
       </div>
 
       <!-- STATUS -->
@@ -290,7 +292,7 @@
       <div class="approach-info" id="approachInfo">
         <div class="approach-row">
           <span class="lbl">Vehicle</span>
-          <span class="val">AMB-06 · Lookout</span>
+          <span class="val">AMB-HR26 · Lookout</span>
         </div>
         <div class="approach-row">
           <span class="lbl">Distance</span>
@@ -355,7 +357,7 @@
     <!-- MAP -->
     <div class="map-side">
       <iframe
-        src="https://www.openstreetmap.org/export/embed.html?bbox=-0.14%2C51.49%2C-0.09%2C51.52&layer=mapnik"
+        id="mapFrame" src="https://www.openstreetmap.org/export/embed.html?bbox=76.97%2C28.41%2C77.09%2C28.53&layer=mapnik"
         allowfullscreen
         loading="lazy"
       ></iframe>
@@ -364,6 +366,16 @@
   </div>
 
   <script>
+    const profile = JSON.parse(localStorage.getItem('lookoutProfile') || '{}');
+    if (profile.name) {
+      document.getElementById('profileLine').textContent = `Hi ${profile.name} (${profile.city || 'Haryana'}). Lookout is monitoring your route and sending instant alerts.`;
+    }
+
+    const mapFrame = document.getElementById('mapFrame');
+    const coords = profile.coords || { lat: 28.4595, lon: 77.0266 };
+    const bbox = `${coords.lon - 0.04}%2C${coords.lat - 0.03}%2C${coords.lon + 0.04}%2C${coords.lat + 0.03}`;
+    mapFrame.src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik`;
+
     let currentState = 'clear';
     let notifCount = 0;
 
@@ -434,5 +446,6 @@
       }
     }
   </script>
+  <script src="app.js"></script>
 </body>
 </html>
