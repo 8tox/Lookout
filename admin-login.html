@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#D92B2B"/>
+  <link rel="manifest" href="manifest.json"/>
   <title>Admin Login – Lookout</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
@@ -132,17 +134,17 @@
 
       <div class="demo-box">
         <strong>Prototype Demo</strong>
-        Use any email and code to log in — e.g. <code>admin@citygeneral.demo</code> / <code>DEMO-CODE-123</code>
+        Use any email and code to log in — e.g. <code>admin@aarogyaharyana.demo</code> / <code>HR-LOOKOUT-2026</code>
       </div>
 
       <div class="form-group">
         <label for="email">Hospital Email</label>
-        <input type="email" id="email" placeholder="admin@citygeneral.demo"/>
+        <input type="email" id="email" placeholder="admin@aarogyaharyana.demo"/>
       </div>
 
       <div class="form-group">
         <label for="code">Hospital Verification Code</label>
-        <input type="text" id="code" placeholder="DEMO-CODE-123"/>
+        <input type="text" id="code" placeholder="HR-LOOKOUT-2026"/>
       </div>
 
       <button class="btn-full" onclick="handleLogin()">Login to Dashboard</button>
@@ -164,5 +166,6 @@
       window.location.href = 'admin-dashboard.html';
     }
   </script>
+  <script src="app.js"></script>
 </body>
 </html>
