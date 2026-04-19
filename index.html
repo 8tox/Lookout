@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#D92B2B"/>
+  <link rel="manifest" href="manifest.json"/>
   <title>Lookout – Every Second Matters</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
@@ -238,6 +240,52 @@
       line-height: 1.6;
     }
 
+
+    .setup-card {
+      max-width: 960px;
+      margin: 0 auto 42px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+
+    .setup-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .setup-actions {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .setup-meta {
+      font-size: 13px;
+      color: var(--text2);
+      margin-top: 12px;
+    }
+
+    .demo-profiles {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .demo-profiles div {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--text2);
+    }
+
     footer {
       text-align: center;
       padding: 24px;
@@ -283,6 +331,30 @@
     <h1>Getting ambulances there<br/><span>every second faster</span></h1>
     <p>Lookout connects hospital dispatchers, ambulance crews, and road users in real time — clearing the path so emergency vehicles reach patients when it matters most.</p>
     <div class="role-label">Select your role to get started</div>
+  </section>
+
+  <section class="setup-card">
+    <h2 style="font-family:var(--font-display);font-size:24px;">App Setup (2 mins)</h2>
+    <p class="sub" style="margin-top:6px;">Set your details once so Lookout can send correct alerts, routes, and emergency contacts.</p>
+    <div class="setup-grid">
+      <div class="form-group"><label for="userName">Your Name</label><input id="userName" placeholder="Aarav Malik"/></div>
+      <div class="form-group"><label for="userRole">Role</label><select id="userRole"><option>Road User</option><option>Ambulance Driver</option><option>Hospital Admin</option></select></div>
+      <div class="form-group"><label for="userCity">City (near Haryana)</label><select id="userCity"><option>Gurugram</option><option>Faridabad</option><option>Panipat</option><option>Karnal</option><option>Rohtak</option><option>Sonipat</option></select></div>
+      <div class="form-group"><label for="userArea">Area / Landmark</label><input id="userArea" placeholder="Sector 29, near HUDA Market"/></div>
+      <div class="form-group"><label for="emergencyContact">Emergency Contact</label><input id="emergencyContact" placeholder="+91 98123 45678"/></div>
+      <div class="form-group"><label for="alertMode">Preferred Alert Mode</label><select id="alertMode"><option>App Notification + Sound</option><option>App Notification Only</option><option>SMS Backup + App Notification</option></select></div>
+    </div>
+    <div class="setup-actions">
+      <button class="btn-red" onclick="enableLocation()">Allow Location</button>
+      <button class="btn-ghost" onclick="enableNotifications()">Allow Notifications</button>
+      <button class="btn-red" onclick="saveProfile()">Save App Profile</button>
+    </div>
+    <div class="setup-meta" id="setupStatus">Tip: enable location + notifications for best ambulance proximity alerts.</div>
+    <div class="demo-profiles">
+      <div><strong>Neha Dahiya</strong><br/>Road User · Sonipat</div>
+      <div><strong>Rohit Yadav</strong><br/>Driver · Gurugram Civil Lines</div>
+      <div><strong>Pooja Malik</strong><br/>Hospital Admin · Panipat</div>
+    </div>
   </section>
 
   <div class="cards">
@@ -393,6 +465,64 @@
   <footer>
     &copy; 2026 Lookout &mdash; Every Second Matters. Built as a prototype.
   </footer>
+
+
+  <script src="app.js"></script>
+  <script>
+    const cityCoords = {
+      Gurugram: { lat: 28.4595, lon: 77.0266 },
+      Faridabad: { lat: 28.4089, lon: 77.3178 },
+      Panipat: { lat: 29.3909, lon: 76.9635 },
+      Karnal: { lat: 29.6857, lon: 76.9905 },
+      Rohtak: { lat: 28.8955, lon: 76.6066 },
+      Sonipat: { lat: 28.9931, lon: 77.0151 }
+    };
+
+    let liveCoords = null;
+
+    function enableLocation() {
+      const status = document.getElementById('setupStatus');
+      if (!navigator.geolocation) {
+        status.textContent = 'Location not supported in this browser.';
+        return;
+      }
+      navigator.geolocation.getCurrentPosition((pos) => {
+        liveCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        status.textContent = 'Location permission granted. Live coordinates are ready.';
+      }, () => {
+        status.textContent = 'Location not granted. We will use your selected Haryana city instead.';
+      });
+    }
+
+    function enableNotifications() {
+      const status = document.getElementById('setupStatus');
+      if (!('Notification' in window)) {
+        status.textContent = 'Notifications are not supported on this device.';
+        return;
+      }
+      Notification.requestPermission().then((permission) => {
+        status.textContent = permission === 'granted'
+          ? 'Notifications enabled successfully.'
+          : 'Notifications are off. You can still use on-screen alerts.';
+      });
+    }
+
+    function saveProfile() {
+      const city = document.getElementById('userCity').value;
+      const profile = {
+        name: document.getElementById('userName').value.trim() || 'Guest User',
+        role: document.getElementById('userRole').value,
+        city,
+        area: document.getElementById('userArea').value.trim() || 'Not specified',
+        emergencyContact: document.getElementById('emergencyContact').value.trim() || 'Not specified',
+        alertMode: document.getElementById('alertMode').value,
+        coords: liveCoords || cityCoords[city],
+        updatedAt: new Date().toISOString()
+      };
+      localStorage.setItem('lookoutProfile', JSON.stringify(profile));
+      document.getElementById('setupStatus').textContent = `Saved for ${profile.name} (${profile.city}). You can now open your role dashboard.`;
+    }
+  </script>
 
 </body>
 </html>

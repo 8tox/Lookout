@@ -1,0 +1,17 @@
+{
+  "name": "Lookout Emergency App",
+  "short_name": "Lookout",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#F7F6F3",
+  "theme_color": "#D92B2B",
+  "description": "Emergency response coordination app for admins, drivers, and road users.",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='24' fill='%23D92B2B'/%3E%3Cpath d='M64 112s42-21 42-52V26L64 10 22 26v34c0 31 42 52 42 52z' fill='white'/%3E%3C/svg%3E",
+      "sizes": "128x128",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

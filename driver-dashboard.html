@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#D92B2B"/>
+  <link rel="manifest" href="manifest.json"/>
   <title>Driver Console – Lookout</title>
   <link rel="stylesheet" href="style.css"/>
   <style>
@@ -285,7 +287,7 @@
         EMERGENCY MODE ACTIVE — Road users being alerted
       </div>
       <iframe
-        src="https://www.openstreetmap.org/export/embed.html?bbox=-0.13%2C51.50%2C-0.09%2C51.52&layer=mapnik"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=76.98%2C28.41%2C77.08%2C28.50&layer=mapnik"
         allowfullscreen
         loading="lazy"
       ></iframe>
@@ -299,13 +301,13 @@
         <h3>Active Mission</h3>
         <div class="mission-card">
           <div class="mission-label">📍 Patient Pickup</div>
-          <div class="mission-addr">14 Oak Lane, EC1A 1BB</div>
+          <div class="mission-addr">Sector 21, Dwarka Expressway</div>
           <div class="mission-detail">Reported: Cardiac arrest · Priority High</div>
         </div>
         <div class="mission-card" style="background:var(--blue-light);border-color:#BFDBFE;">
           <div class="mission-label" style="color:var(--blue);">🏥 Drop-off Hospital</div>
           <div class="mission-addr">St. Mary's Hospital</div>
-          <div class="mission-detail">Praed St, London W2 1NY</div>
+          <div class="mission-detail">Civil Hospital, Gurugram</div>
         </div>
 
         <div class="phase-row">
@@ -437,5 +439,6 @@
       el.classList.add('selected');
     }
   </script>
+  <script src="app.js"></script>
 </body>
 </html>
